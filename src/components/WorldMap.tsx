@@ -33,6 +33,7 @@ interface Props {
   docB: string;
   dataA: Record<string, AccessLevel>;
   dataB: Record<string, AccessLevel>;
+  compact?: boolean;
 }
 
 function countryColor(name: string, docA: string, docB: string, dataA: Record<string, AccessLevel>, dataB: Record<string, AccessLevel>): string {
@@ -54,7 +55,7 @@ const BLANK_STYLE = { default: { outline: 'none' }, hover: { outline: 'none', op
 const MIN_ZOOM = 1;
 const MAX_ZOOM = 8;
 
-export default function WorldMap({ docA, docB, dataA, dataB }: Props) {
+export default function WorldMap({ docA, docB, dataA, dataB, compact = false }: Props) {
   const [zoom, setZoom] = useState(1);
   const [tip, setTip] = useState<TooltipState>({ visible: false, x: 0, y: 0, country: '', entryA: undefined, entryB: undefined });
 
@@ -91,11 +92,13 @@ export default function WorldMap({ docA, docB, dataA, dataB }: Props) {
         </ZoomableGroup>
       </ComposableMap>
 
-      <div className="map-controls">
-        <button className="map-btn" onClick={() => setZoom(z => Math.min(z * 2, MAX_ZOOM))} aria-label="Zoom in">+</button>
-        <button className="map-btn" onClick={() => setZoom(z => Math.max(z / 2, MIN_ZOOM))} aria-label="Zoom out">−</button>
-        <button className="map-btn map-btn--reset" onClick={() => setZoom(1)} aria-label="Reset zoom">Reset</button>
-      </div>
+      {!compact && (
+        <div className="map-controls">
+          <button className="map-btn" onClick={() => setZoom(z => Math.min(z * 2, MAX_ZOOM))} aria-label="Zoom in">+</button>
+          <button className="map-btn" onClick={() => setZoom(z => Math.max(z / 2, MIN_ZOOM))} aria-label="Zoom out">−</button>
+          <button className="map-btn map-btn--reset" onClick={() => setZoom(1)} aria-label="Reset zoom">Reset</button>
+        </div>
+      )}
 
       {tip.visible && (
         <div className="map-tip" style={{ left: tip.x + 14, top: tip.y - 8 }}>
