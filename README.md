@@ -17,17 +17,17 @@ A document's individual strength is measured by how many destinations it can ent
 The most powerful pairs are not the two strongest individual documents — they are the pairs where each document covers a different region of the world with minimal overlap.
 
 ```
-        ┌─────────────────────────────┐
-        │                             │
-   ┌────┼────────┐         ┌──────────┼────┐
-   │    │        │         │          │    │
-   │  A │  A ∩ B │         │   A ∩ B  │ B  │
-   │only│  (both)│         │   (both) │only│
-   │    │        │         │          │    │
-   └────┼────────┘         └──────────┼────┘
-        │                             │
-        │          neither            │
-        └─────────────────────────────┘
+  ┌──────────────────────────────────────────────────┐
+  │                     neither                      │
+  │                                                  │
+  │   ┌─────────────────────┐                        │
+  │   │          ┌──────────────────────┐            │
+  │   │  A only  │  A ∩ B   │  B only  │            │
+  │   │          │  (both)  │          │            │
+  │   └─────────────────────┘          │            │
+  │              └──────────────────────┘            │
+  │                                                  │
+  └──────────────────────────────────────────────────┘
 ```
 
 | Zone | Meaning |
