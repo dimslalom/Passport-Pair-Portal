@@ -4,7 +4,6 @@ import { geoRobinson } from 'd3-geo-projection';
 import type { AccessLevel, TooltipState } from '../types';
 import { getAccessLabel } from '../lib/travel';
 
-// Bridges topojson abbreviated/modernized names to CSV country names
 const TOPO_TO_CSV: Record<string, string> = {
   'United States of America': 'United States',
   'Bosnia and Herz.':         'Bosnia and Herzegovina',
@@ -22,17 +21,15 @@ const TOPO_TO_CSV: Record<string, string> = {
 
 const LEGEND = [
   { color: 'var(--color-accent)', label: 'Both documents' },
-  { color: '#4a90c8',             label: 'Document A only' },
-  { color: '#c84a4a',             label: 'Document B only' },
+  { color: '#4a90c8',             label: 'Passport A only' },
+  { color: '#c84a4a',             label: 'Passport B only' },
   { color: '#2a2a2a',             label: 'Restricted' },
   { color: '#555555',             label: 'Home countries' },
 ] as const;
 
 interface Props {
-  docA: string;
-  docB: string;
-  dataA: Record<string, AccessLevel>;
-  dataB: Record<string, AccessLevel>;
+  docA: string; docB: string;
+  dataA: Record<string, AccessLevel>; dataB: Record<string, AccessLevel>;
   compact?: boolean;
 }
 
@@ -48,48 +45,49 @@ function countryColor(name: string, docA: string, docB: string, dataA: Record<st
   return '#2a2a2a';
 }
 
-// Correct translate for our 800×460 viewBox — geoRobinson() defaults to [480,250]
-// which is D3's 960×500 standard canvas and clips the right edge in our layout.
+// Full map: geoRobinson defaults to [480,250] for 960×500; corrected for our 800×460 viewBox
 const PROJECTION = geoRobinson().scale(145).translate([400, 230]);
+// Compact map: scaled for 800×300 viewBox — scale proportional to height, center halved
+const COMPACT_PROJECTION = geoRobinson().scale(95).translate([400, 150]);
 const BLANK_STYLE = { default: { outline: 'none' }, hover: { outline: 'none', opacity: 0.8 }, pressed: { outline: 'none' } };
-const MIN_ZOOM = 1;
-const MAX_ZOOM = 8;
+const MIN_ZOOM = 1; const MAX_ZOOM = 8;
+const GEO_URL = '/data/world-110m.json';
 
 export default function WorldMap({ docA, docB, dataA, dataB, compact = false }: Props) {
   const [zoom, setZoom] = useState(1);
   const [tip, setTip] = useState<TooltipState>({ visible: false, x: 0, y: 0, country: '', entryA: undefined, entryB: undefined });
 
+  const geos = (
+    <Geographies geography={GEO_URL}>
+      {({ geographies }) => geographies.map(geo => {
+        const name: string = geo.properties.name;
+        return (
+          <Geography
+            key={geo.rsmKey} geography={geo}
+            fill={countryColor(name, docA, docB, dataA, dataB)}
+            stroke="var(--color-bg)" strokeWidth={0.4} style={BLANK_STYLE}
+            onMouseEnter={e => {
+              const csv = TOPO_TO_CSV[name] ?? name;
+              setTip({ visible: true, x: e.clientX, y: e.clientY, country: csv, entryA: dataA[csv], entryB: dataB[csv] });
+            }}
+            onMouseMove={e => setTip(t => ({ ...t, x: e.clientX, y: e.clientY }))}
+            onMouseLeave={() => setTip(t => ({ ...t, visible: false }))}
+          />
+        );
+      })}
+    </Geographies>
+  );
+
   return (
     <div className="worldmap">
       <ComposableMap
-        projection={PROJECTION}
-        width={800}
-        height={460}
+        projection={compact ? COMPACT_PROJECTION : PROJECTION} width={800} height={compact ? 300 : 460}
         style={{ width: '100%', height: 'auto', display: 'block' }}
       >
-        <ZoomableGroup zoom={zoom} minZoom={MIN_ZOOM} maxZoom={MAX_ZOOM} onMoveEnd={({ zoom: z }) => setZoom(z)}>
-          <Geographies geography="/data/world-110m.json">
-            {({ geographies }) => geographies.map(geo => {
-              const name: string = geo.properties.name;
-              return (
-                <Geography
-                  key={geo.rsmKey}
-                  geography={geo}
-                  fill={countryColor(name, docA, docB, dataA, dataB)}
-                  stroke="var(--color-bg)"
-                  strokeWidth={0.4}
-                  style={BLANK_STYLE}
-                  onMouseEnter={e => {
-                    const csv = TOPO_TO_CSV[name] ?? name;
-                    setTip({ visible: true, x: e.clientX, y: e.clientY, country: csv, entryA: dataA[csv], entryB: dataB[csv] });
-                  }}
-                  onMouseMove={e => setTip(t => ({ ...t, x: e.clientX, y: e.clientY }))}
-                  onMouseLeave={() => setTip(t => ({ ...t, visible: false }))}
-                />
-              );
-            })}
-          </Geographies>
-        </ZoomableGroup>
+        {compact
+          ? geos
+          : <ZoomableGroup zoom={zoom} minZoom={MIN_ZOOM} maxZoom={MAX_ZOOM} onMoveEnd={({ zoom: z }) => setZoom(z)}>{geos}</ZoomableGroup>
+        }
       </ComposableMap>
 
       {!compact && (
@@ -111,8 +109,7 @@ export default function WorldMap({ docA, docB, dataA, dataB, compact = false }: 
       <div className="map-legend">
         {LEGEND.map(({ color, label }) => (
           <span key={label} className="map-legend__item">
-            <span className="map-legend__dot" style={{ background: color }} />
-            {label}
+            <span className="map-legend__dot" style={{ background: color }} />{label}
           </span>
         ))}
       </div>

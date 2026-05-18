@@ -50,7 +50,12 @@ export default function App() {
       <header className="site-header">
         <div className="site-header__inner">
           <h1 className="site-header__title">PASSPORT PAIR PORTAL</h1>
-          <p className="site-header__desc">Find the strongest combination of two travel documents.</p>
+          <p className="site-header__desc">Find the strongest combination of two passports.</p>
+          <p className="site-header__credit">
+            by <a href="https://dimas.works" className="site-header__link" target="_blank" rel="noopener noreferrer">dimas.works</a>
+            {' · '}
+            <a href="https://instagram.com/dimmiegoreng" className="site-header__link" target="_blank" rel="noopener noreferrer">@dimmiegoreng</a>
+          </p>
         </div>
         <nav className="site-nav">
           <button
@@ -68,13 +73,13 @@ export default function App() {
         <>
           <section className="selector-section">
             <div className="selector-col">
-              <DocumentSelector label="Document A" documents={travelData.documents} value={docA} onChange={setDocA} />
-              <DocumentSelector label="Document B" documents={travelData.documents} value={docB} onChange={setDocB} />
+              <DocumentSelector label="Passport A" documents={travelData.documents} value={docA} onChange={setDocA} />
+              <DocumentSelector label="Passport B" documents={travelData.documents} value={docB} onChange={setDocB} />
             </div>
             <div className="scorecard-col">
               {result && docA && docB
                 ? <ScoreCard docA={docA} docB={docB} result={result} />
-                : <p className="scorecard-empty">Select two travel documents above to compare their combined reach.</p>}
+                : <p className="scorecard-empty">Select two passports above to compare their combined reach.</p>}
             </div>
           </section>
 
@@ -101,6 +106,16 @@ export default function App() {
       {tab === 'rankings' && (
         <RankingsTab travelData={travelData} onOpenCompare={openCompare} />
       )}
+
+      <footer className="site-footer">
+        <span>Made by <strong>@dimmiegoreng</strong></span>
+        <span className="site-footer__sep">·</span>
+        <a href="https://dimas.works" className="site-footer__link" target="_blank" rel="noopener noreferrer">dimas.works</a>
+        <span className="site-footer__sep">·</span>
+        <a href="https://instagram.com/dimmiegoreng" className="site-footer__link" target="_blank" rel="noopener noreferrer">Instagram</a>
+        <span className="site-footer__sep">·</span>
+        <a href="https://twitter.com/dimmiegoreng" className="site-footer__link" target="_blank" rel="noopener noreferrer">Twitter / X</a>
+      </footer>
     </div>
   );
 }

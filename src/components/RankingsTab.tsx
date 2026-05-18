@@ -64,7 +64,7 @@ export default function RankingsTab({ travelData, onOpenCompare }: Props) {
       <div className="rankings__toolbar">
         <div className="rankings__search">
           <div className="rankings__field">
-            <label className="rankings__field-label">Country A</label>
+            <label className="rankings__field-label">Passport A</label>
             <input
               className="rankings__input"
               placeholder="e.g. Germany"
@@ -73,7 +73,7 @@ export default function RankingsTab({ travelData, onOpenCompare }: Props) {
             />
           </div>
           <div className="rankings__field">
-            <label className="rankings__field-label">Country B</label>
+            <label className="rankings__field-label">Passport B</label>
             <input
               className="rankings__input"
               placeholder="e.g. Japan"
@@ -101,12 +101,12 @@ export default function RankingsTab({ travelData, onOpenCompare }: Props) {
         <p className="rankings__no-results">No pair found matching both search terms.</p>
       )}
 
-      <table className="rank-table">
+      <div className="rank-table-wrap"><table className="rank-table">
         <thead>
           <tr>
             <th className="rank-th rank-th--rank">Rank</th>
-            <th className="rank-th">Document A</th>
-            <th className="rank-th">Document B</th>
+            <th className="rank-th">Passport A</th>
+            <th className="rank-th">Passport B</th>
             <th className="rank-th rank-th--score">Reachable</th>
           </tr>
         </thead>
@@ -137,8 +137,18 @@ export default function RankingsTab({ travelData, onOpenCompare }: Props) {
                   <tr className="rank-detail">
                     <td colSpan={4}>
                       <div className="rank-detail__inner">
-                        <div className="rank-detail__score">
-                          <ScoreCard docA={pair.a} docB={pair.b} result={result} />
+                        <div className="rank-detail__left">
+                          <div className="rank-detail__score">
+                            <ScoreCard docA={pair.a} docB={pair.b} result={result} />
+                          </div>
+                          <div className="rank-detail__footer">
+                            <button
+                              className="rank-detail__cta"
+                              onClick={e => { e.stopPropagation(); onOpenCompare(pair.a, pair.b); }}
+                            >
+                              More details →
+                            </button>
+                          </div>
                         </div>
                         <div className="rank-detail__map">
                           <WorldMap
@@ -149,14 +159,6 @@ export default function RankingsTab({ travelData, onOpenCompare }: Props) {
                             compact
                           />
                         </div>
-                        <div className="rank-detail__footer">
-                          <button
-                            className="rank-detail__cta"
-                            onClick={e => { e.stopPropagation(); onOpenCompare(pair.a, pair.b); }}
-                          >
-                            More details →
-                          </button>
-                        </div>
                       </div>
                     </td>
                   </tr>
@@ -165,7 +167,7 @@ export default function RankingsTab({ travelData, onOpenCompare }: Props) {
             );
           })}
         </tbody>
-      </table>
+      </table></div>
 
       {visible.length < sorted.length && (
         <div className="rankings__more">
