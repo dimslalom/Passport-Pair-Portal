@@ -1,0 +1,34 @@
+name: Update travel index
+
+on:
+  schedule:
+    - cron: '0 0 * * 1'   # every Monday at 00:00 UTC
+  workflow_dispatch:
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Fetch latest CSV
+        run: |
+          curl -fsSL \
+            "https://raw.githubusercontent.com/ilyankou/passport-index-dataset/master/passport-index-tidy.csv" \
+            -o public/data/travel-index.csv
+
+      - name: Commit and push if changed
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add public/data/travel-index.csv
+          if git diff --cached --quiet; then
+            echo "No changes — skipping commit."
+          else
+            git commit -m "chore: update travel data"
+            git push
+          fi

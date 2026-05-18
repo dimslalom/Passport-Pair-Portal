@@ -1,0 +1,131 @@
+/* Reference: Bloomberg Terminal meets Swiss typography poster, 1960s */
+
+:root {
+  --color-bg: #0a0a0a; --color-fg: #f5f0e8; --color-accent: #c8f04a;
+  --border: rgba(245,240,232,0.15);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--color-bg); color: var(--color-fg);
+  font-family: 'Space Grotesk', sans-serif; font-size: 14px; line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+button { cursor: pointer; font-family: inherit; }
+
+/* App shell */
+.app { display: flex; flex-direction: column; min-height: 100vh; }
+.app-state {
+  display: flex; align-items: center; justify-content: center; min-height: 100vh;
+  font-family: 'JetBrains Mono', monospace; color: rgba(245,240,232,0.4); font-size: 13px;
+}
+.app-state--error { color: #c84a4a; }
+
+/* Header */
+.site-header { border-bottom: 1px solid var(--border); padding: 32px 0; }
+.site-header__inner { max-width: 1280px; margin: 0 auto; padding: 0 48px; }
+.site-header__title {
+  font-family: 'Space Grotesk', sans-serif; font-weight: 700;
+  font-size: clamp(40px, 6vw, 80px); line-height: 1.05; letter-spacing: -0.02em;
+}
+.site-header__desc { margin-top: 8px; font-size: 14px; color: rgba(245,240,232,0.5); }
+
+/* Selector section — 40/60 split */
+.selector-section { display: flex; border-bottom: 1px solid var(--border); }
+.selector-col {
+  flex: 0 0 40%; padding: 32px 48px;
+  display: flex; flex-direction: column; gap: 16px; border-right: 1px solid var(--border);
+}
+.scorecard-col { flex: 1; padding: 32px 48px; display: flex; align-items: center; }
+.scorecard-empty { color: rgba(245,240,232,0.3); font-size: 13px; }
+
+/* Document selector */
+.selector { position: relative; display: flex; flex-direction: column; gap: 4px; }
+.selector__label {
+  font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
+  color: rgba(245,240,232,0.4);
+}
+.selector__trigger {
+  display: flex; align-items: center; gap: 8px; width: 100%; padding: 10px 12px;
+  background: transparent; border: 1px solid var(--border); color: var(--color-fg);
+  font-size: 14px; text-align: left; transition: border-color 0.15s;
+}
+.selector__trigger:hover { border-color: rgba(245,240,232,0.4); }
+.selector__trigger[aria-expanded="true"] { border-color: var(--color-accent); }
+.selector__placeholder { color: rgba(245,240,232,0.3); }
+.selector__code { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--color-accent); }
+.selector__dropdown {
+  position: absolute; top: calc(100% + 4px); left: 0; right: 0; z-index: 100;
+  background: #141414; border: 1px solid var(--border);
+  display: flex; flex-direction: column; max-height: 320px;
+}
+.selector__search {
+  padding: 8px 12px; background: transparent; border: none;
+  border-bottom: 1px solid var(--border); color: var(--color-fg);
+  font-family: 'Space Grotesk', sans-serif; font-size: 13px; outline: none;
+}
+.selector__search::placeholder { color: rgba(245,240,232,0.3); }
+.selector__list { list-style: none; overflow-y: auto; flex: 1; }
+.selector__item {
+  display: flex; align-items: center; gap: 8px; padding: 8px 12px;
+  cursor: pointer; font-size: 13px; transition: background 0.1s;
+}
+.selector__item:hover { background: rgba(245,240,232,0.06); }
+.selector__item--active {
+  background: rgba(200,240,74,0.08); border-left: 2px solid var(--color-accent); padding-left: 10px;
+}
+.selector__empty { padding: 12px; color: rgba(245,240,232,0.3); font-size: 13px; }
+
+/* Score card */
+.scorecard { width: 100%; }
+.sc-row { display: flex; }
+.sc-row--ranks { margin-bottom: 24px; }
+.sc-divider { height: 1px; background: var(--border); margin-bottom: 24px; }
+.sc-stat { display: flex; flex-direction: column; gap: 4px; padding-right: 32px; margin-right: 32px; border-right: 1px solid var(--border); }
+.sc-stat:last-child { border-right: none; margin-right: 0; padding-right: 0; }
+.sc-stat__label {
+  font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
+  color: rgba(245,240,232,0.4); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 180px;
+}
+.sc-stat__value { font-family: 'JetBrains Mono', monospace; font-size: 28px; font-weight: 600; line-height: 1.1; }
+.sc-stat__sub { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: rgba(245,240,232,0.35); }
+.sc-stat--accent .sc-stat__value { color: var(--color-accent); }
+
+/* Map */
+.map-section { border-bottom: 1px solid var(--border); }
+.worldmap { position: relative; }
+.map-tip {
+  position: fixed; z-index: 200; background: #161616; border: 1px solid var(--border);
+  padding: 8px 12px; pointer-events: none; min-width: 140px;
+}
+.map-tip__name { font-weight: 600; font-size: 12px; margin-bottom: 4px; }
+.map-tip__row { display: flex; justify-content: space-between; gap: 16px; font-size: 11px; color: rgba(245,240,232,0.5); }
+.map-tip__row code { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--color-fg); }
+.map-legend { display: flex; flex-wrap: wrap; gap: 16px; padding: 12px 48px; border-top: 1px solid var(--border); }
+.map-legend__item { display: flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; color: rgba(245,240,232,0.45); }
+.map-legend__dot { width: 8px; height: 8px; flex-shrink: 0; }
+
+/* Destination table */
+.table-section { padding: 48px; }
+.dest-table-wrap { overflow-x: auto; }
+.dest-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.dest-table thead tr { border-bottom: 1px solid var(--border); }
+.dest-table th { padding: 0 24px 12px 0; text-align: left; }
+.dest-table td { padding: 8px 24px 8px 0; border-bottom: 1px solid rgba(245,240,232,0.04); }
+.dest-table__row--alt td { background: rgba(245,240,232,0.02); }
+.th-sort {
+  background: none; border: none; color: rgba(245,240,232,0.4);
+  font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
+  padding: 0; display: flex; align-items: center; transition: color 0.15s;
+}
+.th-sort:hover, .th--active .th-sort { color: var(--color-fg); }
+.th-sort__arrow { font-family: 'JetBrains Mono', monospace; }
+
+/* Entry type badges */
+.entry-badge { font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 600; letter-spacing: 0.04em; padding: 2px 6px; }
+.entry-open       { color: var(--color-accent); }
+.entry-arrival    { color: #4a90c8; }
+.entry-electronic { color: #c8a84a; }
+.entry-restricted { color: rgba(245,240,232,0.3); }
+.entry-na         { color: rgba(245,240,232,0.15); }
