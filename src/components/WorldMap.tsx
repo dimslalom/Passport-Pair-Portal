@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ComposableMap, Geographies, Geography } from 'react-simple-maps';
+import { ComposableMap, Geographies, Geography, ZoomableGroup } from 'react-simple-maps';
 import { geoRobinson } from 'd3-geo-projection';
 import type { AccessLevel, TooltipState } from '../types';
 import { getAccessLabel } from '../lib/travel';
@@ -47,37 +47,55 @@ function countryColor(name: string, docA: string, docB: string, dataA: Record<st
   return '#2a2a2a';
 }
 
-const PROJECTION = geoRobinson();
+// Correct translate for our 800×460 viewBox — geoRobinson() defaults to [480,250]
+// which is D3's 960×500 standard canvas and clips the right edge in our layout.
+const PROJECTION = geoRobinson().scale(145).translate([400, 230]);
 const BLANK_STYLE = { default: { outline: 'none' }, hover: { outline: 'none', opacity: 0.8 }, pressed: { outline: 'none' } };
+const MIN_ZOOM = 1;
+const MAX_ZOOM = 8;
 
 export default function WorldMap({ docA, docB, dataA, dataB }: Props) {
+  const [zoom, setZoom] = useState(1);
   const [tip, setTip] = useState<TooltipState>({ visible: false, x: 0, y: 0, country: '', entryA: undefined, entryB: undefined });
 
   return (
     <div className="worldmap">
-      <ComposableMap projection={PROJECTION} style={{ width: '100%', height: 'auto', display: 'block' }}>
-        <Geographies geography="/data/world-110m.json">
-          {({ geographies }) => geographies.map(geo => {
-            const name: string = geo.properties.name;
-            return (
-              <Geography
-                key={geo.rsmKey}
-                geography={geo}
-                fill={countryColor(name, docA, docB, dataA, dataB)}
-                stroke="var(--color-bg)"
-                strokeWidth={0.4}
-                style={BLANK_STYLE}
-                onMouseEnter={e => {
-                  const csv = TOPO_TO_CSV[name] ?? name;
-                  setTip({ visible: true, x: e.clientX, y: e.clientY, country: csv, entryA: dataA[csv], entryB: dataB[csv] });
-                }}
-                onMouseMove={e => setTip(t => ({ ...t, x: e.clientX, y: e.clientY }))}
-                onMouseLeave={() => setTip(t => ({ ...t, visible: false }))}
-              />
-            );
-          })}
-        </Geographies>
+      <ComposableMap
+        projection={PROJECTION}
+        width={800}
+        height={460}
+        style={{ width: '100%', height: 'auto', display: 'block' }}
+      >
+        <ZoomableGroup zoom={zoom} minZoom={MIN_ZOOM} maxZoom={MAX_ZOOM} onMoveEnd={({ zoom: z }) => setZoom(z)}>
+          <Geographies geography="/data/world-110m.json">
+            {({ geographies }) => geographies.map(geo => {
+              const name: string = geo.properties.name;
+              return (
+                <Geography
+                  key={geo.rsmKey}
+                  geography={geo}
+                  fill={countryColor(name, docA, docB, dataA, dataB)}
+                  stroke="var(--color-bg)"
+                  strokeWidth={0.4}
+                  style={BLANK_STYLE}
+                  onMouseEnter={e => {
+                    const csv = TOPO_TO_CSV[name] ?? name;
+                    setTip({ visible: true, x: e.clientX, y: e.clientY, country: csv, entryA: dataA[csv], entryB: dataB[csv] });
+                  }}
+                  onMouseMove={e => setTip(t => ({ ...t, x: e.clientX, y: e.clientY }))}
+                  onMouseLeave={() => setTip(t => ({ ...t, visible: false }))}
+                />
+              );
+            })}
+          </Geographies>
+        </ZoomableGroup>
       </ComposableMap>
+
+      <div className="map-controls">
+        <button className="map-btn" onClick={() => setZoom(z => Math.min(z * 2, MAX_ZOOM))} aria-label="Zoom in">+</button>
+        <button className="map-btn" onClick={() => setZoom(z => Math.max(z / 2, MIN_ZOOM))} aria-label="Zoom out">−</button>
+        <button className="map-btn map-btn--reset" onClick={() => setZoom(1)} aria-label="Reset zoom">Reset</button>
+      </div>
 
       {tip.visible && (
         <div className="map-tip" style={{ left: tip.x + 14, top: tip.y - 8 }}>

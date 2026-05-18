@@ -29,6 +29,15 @@ declare module 'react-simple-maps' {
     children: (data: { geographies: RSMGeo[] }) => ReactNode;
   }): JSX.Element;
 
+  export function ZoomableGroup(props: {
+    zoom?: number;
+    minZoom?: number;
+    maxZoom?: number;
+    center?: [number, number];
+    onMoveEnd?: (pos: { zoom: number; coordinates: [number, number] }) => void;
+    children?: ReactNode;
+  }): JSX.Element;
+
   export function Geography(props: {
     geography: RSMGeo;
     fill?: string;

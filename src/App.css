@@ -95,6 +95,19 @@ button { cursor: pointer; font-family: inherit; }
 /* Map */
 .map-section { border-bottom: 1px solid var(--border); }
 .worldmap { position: relative; }
+
+.map-controls {
+  position: absolute; top: 12px; right: 12px;
+  display: flex; gap: 4px;
+}
+.map-btn {
+  background: #141414; border: 1px solid var(--border);
+  color: var(--color-fg); font-family: 'JetBrains Mono', monospace;
+  font-size: 14px; padding: 4px 10px; line-height: 1;
+  transition: border-color 0.15s, color 0.15s;
+}
+.map-btn:hover { border-color: var(--color-accent); color: var(--color-accent); }
+.map-btn--reset { font-family: 'Space Grotesk', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 0.05em; padding: 4px 8px; }
 .map-tip {
   position: fixed; z-index: 200; background: #161616; border: 1px solid var(--border);
   padding: 8px 12px; pointer-events: none; min-width: 140px;
