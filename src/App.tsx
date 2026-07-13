@@ -49,7 +49,7 @@ export default function App() {
     <div className="app">
       <header className="site-header">
         <div className="site-header__inner">
-          <h1 className="site-header__title">PASSPORT PAIR PORTAL</h1>
+          <h1 className="site-header__title">Passport Pair Portal</h1>
           <p className="site-header__desc">Find the strongest combination of two passports.</p>
           <p className="site-header__credit">
             by <a href="https://dimas.works" className="site-header__link" target="_blank" rel="noopener noreferrer">dimas.works</a>

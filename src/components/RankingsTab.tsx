@@ -88,7 +88,7 @@ export default function RankingsTab({ travelData, onOpenCompare }: Props) {
           )}
         </div>
         <div className="rankings__meta">
-          <span className="rankings__count font-mono">
+          <span className="rankings__count num">
             {filtered.length.toLocaleString()} <span className="rankings__count-label">pairs</span>
           </span>
           <button className="rankings__sort" onClick={() => setSortDir(d => d === 'asc' ? 'desc' : 'asc')}>
@@ -123,14 +123,14 @@ export default function RankingsTab({ travelData, onOpenCompare }: Props) {
                   className={`rank-row${isExpanded ? ' rank-row--open' : ''}${autoExpanded ? '' : ' rank-row--clickable'}`}
                   onClick={() => toggle(key)}
                 >
-                  <td className="rank-row__rank"><code className="font-mono">#{rank.toLocaleString()}</code></td>
+                  <td className="rank-row__rank"><code className="num">#{rank.toLocaleString()}</code></td>
                   <td className="rank-row__doc">
-                    <code className="rank-row__iso font-mono">[{getISOCode(pair.a) ?? '??'}]</code>{pair.a}
+                    {pair.a}<code className="rank-row__iso num">{getISOCode(pair.a) ?? ''}</code>
                   </td>
                   <td className="rank-row__doc">
-                    <code className="rank-row__iso font-mono">[{getISOCode(pair.b) ?? '??'}]</code>{pair.b}
+                    {pair.b}<code className="rank-row__iso num">{getISOCode(pair.b) ?? ''}</code>
                   </td>
-                  <td className="rank-row__score"><code className="font-mono">{pair.score}</code></td>
+                  <td className="rank-row__score"><code className="num">{pair.score}</code></td>
                 </tr>
 
                 {isExpanded && result && (
@@ -172,7 +172,7 @@ export default function RankingsTab({ travelData, onOpenCompare }: Props) {
       {visible.length < sorted.length && (
         <div className="rankings__more">
           <button className="rankings__load-btn" onClick={() => setPage(p => p + 1)}>
-            Load more — {(sorted.length - visible.length).toLocaleString()} remaining
+            Load more - {(sorted.length - visible.length).toLocaleString()} remaining
           </button>
         </div>
       )}

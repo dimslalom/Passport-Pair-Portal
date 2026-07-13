@@ -205,5 +205,5 @@ export function getAccessLabel(value: AccessLevel | undefined): string {
   if (value === 2) return 'ON ARRIVAL';
   if (value === 1) return 'E-VISA';
   if (value === 0) return 'REQUIRED';
-  return '—';
+  return '-';
 }

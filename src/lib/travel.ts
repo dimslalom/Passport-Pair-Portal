@@ -78,7 +78,7 @@ export async function loadTravelData(): Promise<TravelData> {
   }
   pairRankings.sort((x, y) => y.score - x.score);
 
-  // O(1) lookup — store both key orderings
+  // O(1) lookup - store both key orderings
   const pairRankMap = new Map<string, number>();
   let pairRank = 1;
   for (let i = 0; i < pairRankings.length; i++) {
@@ -103,7 +103,7 @@ export function computePair(td: TravelData, docA: string, docB: string): PairRes
     if (dest === docA || dest === docB) continue;
     const la = rowA[dest];
     const lb = rowB[dest];
-    if (la === -1 && lb === -1) continue; // NOT APPLICABLE for both — skip
+    if (la === -1 && lb === -1) continue; // NOT APPLICABLE for both - skip
 
     const aReachable = la !== undefined && la >= 2;
     const bReachable = lb !== undefined && lb >= 2;
@@ -127,9 +127,9 @@ export function computePair(td: TravelData, docA: string, docB: string): PairRes
 }
 
 export function getAccessLabel(level: AccessLevel | undefined): string {
-  if (level === undefined || level === -1) return '—';
-  const labels: Record<number, string> = { 3: 'OPEN', 2: 'ARRIVAL', 1: 'ELECTRONIC', 0: 'RESTRICTED' };
-  return labels[level] ?? '—';
+  if (level === undefined || level === -1) return '-';
+  const labels: Record<number, string> = { 3: 'Visa-free', 2: 'On arrival', 1: 'eVisa / eTA', 0: 'Visa required' };
+  return labels[level] ?? '-';
 }
 
 export function getAccessClass(level: AccessLevel | undefined): string {

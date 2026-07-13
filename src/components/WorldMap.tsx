@@ -20,11 +20,11 @@ const TOPO_TO_CSV: Record<string, string> = {
 };
 
 const LEGEND = [
-  { color: 'var(--color-accent)', label: 'Both documents' },
-  { color: '#4a90c8',             label: 'Passport A only' },
-  { color: '#c84a4a',             label: 'Passport B only' },
-  { color: '#2a2a2a',             label: 'Restricted' },
-  { color: '#555555',             label: 'Home countries' },
+  { color: 'var(--ink)',    label: 'Both passports' },
+  { color: 'var(--map-a)',  label: 'Passport A only' },
+  { color: 'var(--map-b)',  label: 'Passport B only' },
+  { color: '#e7e3d7',       label: 'Restricted' },
+  { color: '#b3ac9c',       label: 'Home countries' },
 ] as const;
 
 interface Props {
@@ -35,19 +35,19 @@ interface Props {
 
 function countryColor(name: string, docA: string, docB: string, dataA: Record<string, AccessLevel>, dataB: Record<string, AccessLevel>): string {
   const csv = TOPO_TO_CSV[name] ?? name;
-  if (csv === docA || csv === docB) return '#555555';
+  if (csv === docA || csv === docB) return '#b3ac9c';
   const la = dataA[csv]; const lb = dataB[csv];
   const aOk = la !== undefined && la >= 2;
   const bOk = lb !== undefined && lb >= 2;
-  if (aOk && bOk) return 'var(--color-accent)';
-  if (aOk) return '#4a90c8';
-  if (bOk) return '#c84a4a';
-  return '#2a2a2a';
+  if (aOk && bOk) return 'var(--ink)';
+  if (aOk) return 'var(--map-a)';
+  if (bOk) return 'var(--map-b)';
+  return '#e7e3d7';
 }
 
 // Full map: geoRobinson defaults to [480,250] for 960×500; corrected for our 800×460 viewBox
 const PROJECTION = geoRobinson().scale(145).translate([400, 230]);
-// Compact map: scaled for 800×300 viewBox — scale proportional to height, center halved
+// Compact map: scaled for 800×300 viewBox - scale proportional to height, center halved
 const COMPACT_PROJECTION = geoRobinson().scale(95).translate([400, 150]);
 const BLANK_STYLE = { default: { outline: 'none' }, hover: { outline: 'none', opacity: 0.8 }, pressed: { outline: 'none' } };
 const MIN_ZOOM = 1; const MAX_ZOOM = 8;
