@@ -37,7 +37,12 @@ export default function App() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
-  if (loading) return <div className="app-state">Loading travel data…</div>;
+  function swapDocs() {
+    setDocA(docB);
+    setDocB(docA);
+  }
+
+  if (loading) return <div className="app-state">loading travel data</div>;
   if (error)   return <div className="app-state app-state--error">{error}</div>;
   if (!travelData) return null;
 
@@ -47,74 +52,85 @@ export default function App() {
 
   return (
     <div className="app">
-      <header className="site-header">
-        <div className="site-header__inner">
-          <h1 className="site-header__title">Passport Pair Portal</h1>
-          <p className="site-header__desc">Find the strongest combination of two passports.</p>
-          <p className="site-header__credit">
-            by <a href="https://dimas.works" className="site-header__link" target="_blank" rel="noopener noreferrer">dimas.works</a>
-            {' · '}
-            <a href="https://instagram.com/dimmiegoreng" className="site-header__link" target="_blank" rel="noopener noreferrer">@dimmiegoreng</a>
-          </p>
-        </div>
-        <nav className="site-nav">
+      <header className="bar">
+        <span className="bar__brand">
+          Passport Pair Portal
+          <span className="bar__dot" aria-hidden="true">*</span>
+        </span>
+
+        <nav className="bar__nav">
           <button
-            className={`site-nav__tab${tab === 'compare' ? ' site-nav__tab--active' : ''}`}
+            className={`navtab${tab === 'compare' ? ' navtab--on' : ''}`}
             onClick={() => setTab('compare')}
           >Compare</button>
           <button
-            className={`site-nav__tab${tab === 'rankings' ? ' site-nav__tab--active' : ''}`}
+            className={`navtab${tab === 'rankings' ? ' navtab--on' : ''}`}
             onClick={() => setTab('rankings')}
           >Rankings</button>
         </nav>
+
+        <span className="bar__credit">
+          <a href="https://dimas.works" className="u-link" target="_blank" rel="noopener noreferrer">dimas.works</a>
+          <a href="https://instagram.com/dimmiegoreng" className="u-link" target="_blank" rel="noopener noreferrer">@dimmiegoreng</a>
+        </span>
       </header>
 
-      {tab === 'compare' && (
-        <>
-          <section className="selector-section">
-            <div className="selector-col">
-              <DocumentSelector label="Passport A" documents={travelData.documents} value={docA} onChange={setDocA} />
-              <DocumentSelector label="Passport B" documents={travelData.documents} value={docB} onChange={setDocB} />
-            </div>
-            <div className="scorecard-col">
+      <div className="panel" key={tab}>
+        {tab === 'compare' && (
+          <>
+            <section className="stage">
+              <div className="picks">
+                <DocumentSelector label="A" documents={travelData.documents} value={docA} onChange={setDocA} />
+                <button
+                  className="swap"
+                  onClick={swapDocs}
+                  disabled={!docA && !docB}
+                  aria-label="Swap passports A and B"
+                ><span className="swap__icon" aria-hidden="true">&#8646;</span></button>
+                <DocumentSelector label="B" documents={travelData.documents} value={docB} onChange={setDocB} />
+              </div>
+
               {result && docA && docB
                 ? <ScoreCard docA={docA} docB={docB} result={result} />
-                : <p className="scorecard-empty">Select two passports above to compare their combined reach.</p>}
-            </div>
-          </section>
-
-          {bothSelected && (
-            <section className="map-section">
-              <WorldMap docA={docA!} docB={docB!} dataA={dataA} dataB={dataB} />
+                : (
+                  <p className="stage__hint">
+                    Pick two passports to see how far they reach together
+                    <span className="stage__caret" aria-hidden="true" />
+                  </p>
+                )}
             </section>
-          )}
 
-          {bothSelected && result && (
-            <section className="table-section">
-              <DestinationTable
-                destinations={travelData.destinations}
-                dataA={dataA}
-                dataB={dataB}
-                docA={docA!}
-                docB={docB!}
-              />
-            </section>
-          )}
-        </>
-      )}
+            {bothSelected && (
+              <section className="map-section">
+                <WorldMap docA={docA!} docB={docB!} dataA={dataA} dataB={dataB} />
+              </section>
+            )}
 
-      {tab === 'rankings' && (
-        <RankingsTab travelData={travelData} onOpenCompare={openCompare} />
-      )}
+            {bothSelected && result && (
+              <section className="table-section">
+                <DestinationTable
+                  destinations={travelData.destinations}
+                  dataA={dataA}
+                  dataB={dataB}
+                  docA={docA!}
+                  docB={docB!}
+                />
+              </section>
+            )}
+          </>
+        )}
 
-      <footer className="site-footer">
-        <span>Made by <strong>@dimmiegoreng</strong></span>
-        <span className="site-footer__sep">·</span>
-        <a href="https://dimas.works" className="site-footer__link" target="_blank" rel="noopener noreferrer">dimas.works</a>
-        <span className="site-footer__sep">·</span>
-        <a href="https://instagram.com/dimmiegoreng" className="site-footer__link" target="_blank" rel="noopener noreferrer">Instagram</a>
-        <span className="site-footer__sep">·</span>
-        <a href="https://twitter.com/dimmiegoreng" className="site-footer__link" target="_blank" rel="noopener noreferrer">Twitter / X</a>
+        {tab === 'rankings' && (
+          <RankingsTab travelData={travelData} onOpenCompare={openCompare} />
+        )}
+      </div>
+
+      <footer className="foot">
+        <span>Made by <a href="https://instagram.com/dimmiegoreng" className="u-link" target="_blank" rel="noopener noreferrer">@dimmiegoreng</a></span>
+        <span className="foot__links">
+          <a href="https://dimas.works" className="u-link" target="_blank" rel="noopener noreferrer">dimas.works</a>
+          <a href="https://twitter.com/dimmiegoreng" className="u-link" target="_blank" rel="noopener noreferrer">Twitter / X</a>
+        </span>
       </footer>
     </div>
   );

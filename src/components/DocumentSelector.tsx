@@ -41,8 +41,9 @@ export default function DocumentSelector({ label, documents, value, onChange }: 
         aria-expanded={open}
       >
         {value
-          ? <>{value} <code className="selector__code">{code(value)}</code></>
-          : <span className="selector__placeholder">Select country…</span>}
+          ? <>{value} <code className="selector__code num">{code(value)}</code></>
+          : <span className="selector__placeholder">select country</span>}
+        <span className="selector__caret" aria-hidden="true">&#9662;</span>
       </button>
 
       {open && (
@@ -63,7 +64,7 @@ export default function DocumentSelector({ label, documents, value, onChange }: 
                 className={`selector__item${doc === value ? ' selector__item--active' : ''}`}
                 onMouseDown={() => select(doc)}
               >
-                {doc}<code className="selector__code">{code(doc)}</code>
+                {doc}<code className="selector__code num">{code(doc)}</code>
               </li>
             ))}
             {filtered.length === 0 && <li className="selector__empty">No results</li>}

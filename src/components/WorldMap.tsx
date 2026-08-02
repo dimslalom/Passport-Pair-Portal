@@ -20,11 +20,11 @@ const TOPO_TO_CSV: Record<string, string> = {
 };
 
 const LEGEND = [
-  { color: 'var(--ink)',    label: 'Both passports' },
-  { color: 'var(--map-a)',  label: 'Passport A only' },
-  { color: 'var(--map-b)',  label: 'Passport B only' },
-  { color: '#e7e3d7',       label: 'Restricted' },
-  { color: '#b3ac9c',       label: 'Home countries' },
+  { color: 'var(--color-accent)', label: 'Both passports' },
+  { color: 'var(--map-a)',        label: 'Passport A only' },
+  { color: 'var(--map-b)',        label: 'Passport B only' },
+  { color: '#232320',             label: 'Restricted' },
+  { color: '#55534a',             label: 'Home countries' },
 ] as const;
 
 interface Props {
@@ -35,14 +35,14 @@ interface Props {
 
 function countryColor(name: string, docA: string, docB: string, dataA: Record<string, AccessLevel>, dataB: Record<string, AccessLevel>): string {
   const csv = TOPO_TO_CSV[name] ?? name;
-  if (csv === docA || csv === docB) return '#b3ac9c';
+  if (csv === docA || csv === docB) return '#55534a';
   const la = dataA[csv]; const lb = dataB[csv];
   const aOk = la !== undefined && la >= 2;
   const bOk = lb !== undefined && lb >= 2;
-  if (aOk && bOk) return 'var(--ink)';
+  if (aOk && bOk) return 'var(--color-accent)';
   if (aOk) return 'var(--map-a)';
   if (bOk) return 'var(--map-b)';
-  return '#e7e3d7';
+  return '#232320';
 }
 
 // Full map: geoRobinson defaults to [480,250] for 960×500; corrected for our 800×460 viewBox

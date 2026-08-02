@@ -53,8 +53,8 @@ export default function DestinationTable({ destinations, dataA, dataB, docA, doc
           </tr>
         </thead>
         <tbody>
-          {rows.map((dest, i) => (
-            <tr key={dest} className={i % 2 === 1 ? 'dest-table__row--alt' : ''}>
+          {rows.map(dest => (
+            <tr key={dest}>
               <td className="dest-table__country">{dest}</td>
               <td><code className={`entry-badge ${getAccessClass(dataA[dest])}`}>{getAccessLabel(dataA[dest])}</code></td>
               <td><code className={`entry-badge ${getAccessClass(dataB[dest])}`}>{getAccessLabel(dataB[dest])}</code></td>

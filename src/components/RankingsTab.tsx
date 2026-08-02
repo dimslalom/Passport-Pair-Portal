@@ -146,7 +146,7 @@ export default function RankingsTab({ travelData, onOpenCompare }: Props) {
                               className="rank-detail__cta"
                               onClick={e => { e.stopPropagation(); onOpenCompare(pair.a, pair.b); }}
                             >
-                              More details →
+                              More details <span className="rank-detail__arr" aria-hidden="true">&#8594;</span>
                             </button>
                           </div>
                         </div>
