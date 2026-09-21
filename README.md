@@ -6,15 +6,15 @@
 
 ## What this is
 
-Given any two travel documents from different countries, Travel Reach computes the total number of destinations reachable by either document, ranks that combination against all ~19,701 possible passport pairs, and renders the result on a Robinson-projection world map — colored by which document covers each country. There is no backend. All computation runs in the browser at load time from a single CSV file.
+Given any two travel documents from different countries, Passport Pair Portal computes the total number of destinations reachable by either document, ranks that combination against all ~19,701 possible passport pairs, and renders the result on a Robinson-projection world map, colored by which document covers each country. There is no backend. All computation runs in the browser at load time from a single CSV file.
 
 ---
 
 ## The problem, explained
 
-A document's individual strength is measured by how many destinations it can enter without prior embassy approval — visa-free, visa on arrival, or e-visa. When you hold two documents, your effective reach is the **union** of both sets, not the sum. The union is always smaller than or equal to the sum because some destinations are accessible by both documents simultaneously.
+A document's individual strength is measured by how many destinations it can enter without prior embassy approval: visa-free, visa on arrival, or e-visa. When you hold two documents, your effective reach is the **union** of both sets, not the sum. The union is always smaller than or equal to the sum because some destinations are accessible by both documents simultaneously.
 
-The most powerful pairs are not the two strongest individual documents — they are the pairs where each document covers a different region of the world with minimal overlap.
+The most powerful pairs are not the two strongest individual documents. They are the pairs where each document covers a different region of the world with minimal overlap.
 
 ```
   ┌──────────────────────────────────────────────────┐
@@ -36,7 +36,7 @@ The most powerful pairs are not the two strongest individual documents — they 
 | B only | Destinations reachable by Document B, not A |
 | A ∩ B | Destinations reachable by both (the overlap) |
 | Neither | Restricted by both documents |
-| A ∪ B | **Combined reach** — the metric that matters |
+| A ∪ B | **Combined reach** (the metric that matters) |
 
 ---
 
@@ -73,7 +73,7 @@ A destination is considered **reachable** if its access level is ≥ 2 (OPEN or 
 3. Rank all passports by individual score descending
 4. Generate all unique passport pairs (n choose 2, where n = 199 countries → 19,701 pairs)
 5. For each pair, compute the union score: count of destinations reachable by either document
-6. Sort all pairs by union score descending — this is the pair ranking
+6. Sort all pairs by union score descending, which is the pair ranking
 7. Store pair ranks in a `Map<"A|B", rank>` for O(1) lookup during rendering
 
 Example pair computation:
@@ -160,7 +160,7 @@ npm install
 npm run dev
 ```
 
-The app is served at . The travel data CSV is read from `public/data/travel-index.csv` at runtime — no environment variables or API keys required.
+The app is served at . The travel data CSV is read from `public/data/travel-index.csv` at runtime, so no environment variables or API keys required.
 
 To build for production:
 

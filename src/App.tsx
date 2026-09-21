@@ -42,7 +42,12 @@ export default function App() {
     setDocB(docA);
   }
 
-  if (loading) return <div className="app-state">loading travel data</div>;
+  if (loading) return (
+    <div className="app-state" role="status">
+      Loading travel data
+      <span className="app-state__bar" aria-hidden="true" />
+    </div>
+  );
   if (error)   return <div className="app-state app-state--error">{error}</div>;
   if (!travelData) return null;
 
@@ -94,8 +99,7 @@ export default function App() {
                 ? <ScoreCard docA={docA} docB={docB} result={result} />
                 : (
                   <p className="stage__hint">
-                    Pick two passports to see how far they reach together
-                    <span className="stage__caret" aria-hidden="true" />
+                    Pick two passports to see how far they reach together.
                   </p>
                 )}
             </section>

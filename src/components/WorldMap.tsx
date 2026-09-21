@@ -20,11 +20,11 @@ const TOPO_TO_CSV: Record<string, string> = {
 };
 
 const LEGEND = [
-  { color: 'var(--color-accent)', label: 'Both passports' },
-  { color: 'var(--map-a)',        label: 'Passport A only' },
-  { color: 'var(--map-b)',        label: 'Passport B only' },
-  { color: '#232320',             label: 'Restricted' },
-  { color: '#55534a',             label: 'Home countries' },
+  { color: 'var(--color-access-both)',      label: 'Both passports' },
+  { color: 'var(--color-access-a)',         label: 'Passport A only' },
+  { color: 'var(--color-access-b)',         label: 'Passport B only' },
+  { color: 'var(--color-map-restricted)',   label: 'Restricted' },
+  { color: 'var(--color-map-home)',         label: 'Home countries' },
 ] as const;
 
 interface Props {
@@ -35,14 +35,14 @@ interface Props {
 
 function countryColor(name: string, docA: string, docB: string, dataA: Record<string, AccessLevel>, dataB: Record<string, AccessLevel>): string {
   const csv = TOPO_TO_CSV[name] ?? name;
-  if (csv === docA || csv === docB) return '#55534a';
+  if (csv === docA || csv === docB) return 'var(--color-map-home)';
   const la = dataA[csv]; const lb = dataB[csv];
   const aOk = la !== undefined && la >= 2;
   const bOk = lb !== undefined && lb >= 2;
-  if (aOk && bOk) return 'var(--color-accent)';
-  if (aOk) return 'var(--map-a)';
-  if (bOk) return 'var(--map-b)';
-  return '#232320';
+  if (aOk && bOk) return 'var(--color-access-both)';
+  if (aOk) return 'var(--color-access-a)';
+  if (bOk) return 'var(--color-access-b)';
+  return 'var(--color-map-restricted)';
 }
 
 // Full map: geoRobinson defaults to [480,250] for 960×500; corrected for our 800×460 viewBox
@@ -65,7 +65,7 @@ export default function WorldMap({ docA, docB, dataA, dataB, compact = false }: 
           <Geography
             key={geo.rsmKey} geography={geo}
             fill={countryColor(name, docA, docB, dataA, dataB)}
-            stroke="var(--color-bg)" strokeWidth={0.4} style={BLANK_STYLE}
+            stroke="var(--color-canvas)" strokeWidth={0.4} style={BLANK_STYLE}
             onMouseEnter={e => {
               const csv = TOPO_TO_CSV[name] ?? name;
               setTip({ visible: true, x: e.clientX, y: e.clientY, country: csv, entryA: dataA[csv], entryB: dataB[csv] });

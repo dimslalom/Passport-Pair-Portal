@@ -42,7 +42,7 @@ export default function DocumentSelector({ label, documents, value, onChange }: 
       >
         {value
           ? <>{value} <code className="selector__code num">{code(value)}</code></>
-          : <span className="selector__placeholder">select country</span>}
+          : <span className="selector__placeholder">Select a country</span>}
         <span className="selector__caret" aria-hidden="true">&#9662;</span>
       </button>
 
@@ -51,7 +51,7 @@ export default function DocumentSelector({ label, documents, value, onChange }: 
           <input
             className="selector__search"
             autoFocus
-            placeholder="Type to filter…"
+            placeholder="Filter countries"
             value={query}
             onChange={e => setQuery(e.target.value)}
           />

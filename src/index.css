@@ -1,14 +1,15 @@
-/* Base: warm black canvas, bone text, lime accent */
+/* Base canvas. Tokens live in App.css; this file only sets the page itself. */
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-html { scrollbar-color: #2c2c26 #0b0b09; }
+html { scrollbar-color: #2e2c25 #0b0b09; }
 
 body {
   background: #0b0b09;
   color: #f0ecdf;
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 14px;
+  font-family: 'Public Sans', system-ui, -apple-system, sans-serif;
+  font-size: 15px;
+  line-height: 1.5;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -16,9 +17,9 @@ body {
 
 ::selection { background: #c8f04a; color: #0b0b09; }
 
-:focus-visible { outline: 1px solid #c8f04a; outline-offset: 3px; }
+:focus-visible { outline: 2px solid #c8f04a; outline-offset: 3px; }
 
 ::-webkit-scrollbar { width: 10px; height: 10px; }
 ::-webkit-scrollbar-track { background: #0b0b09; }
-::-webkit-scrollbar-thumb { background: #2c2c26; border: 2px solid #0b0b09; }
+::-webkit-scrollbar-thumb { background: #2e2c25; border: 2px solid #0b0b09; }
 ::-webkit-scrollbar-thumb:hover { background: #c8f04a; }
